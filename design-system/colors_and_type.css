@@ -1,0 +1,277 @@
+/* =============================================================================
+   Montage / WDS — Design Tokens (light theme defaults; dark via [data-theme="dark"])
+   Source: wanteddev/montage-web @ main, packages/wds-theme/*
+   ============================================================================= */
+
+@font-face {
+  font-family: "Pretendard Variable";
+  src: url("./fonts/PretendardVariable.woff2") format("woff2-variations");
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ─── Atomic — common ─── */
+  --atomic-common-0: #000000;
+  --atomic-common-100: #ffffff;
+
+  /* ─── Atomic — blue (primary) ─── */
+  --atomic-blue-10: #001536;
+  --atomic-blue-20: #002966;
+  --atomic-blue-30: #003E9C;
+  --atomic-blue-40: #0054D1;
+  --atomic-blue-45: #005EEB;
+  --atomic-blue-50: #0066FF;
+  --atomic-blue-55: #1A75FF;
+  --atomic-blue-60: #3385FF;
+  --atomic-blue-65: #4F95FF;
+  --atomic-blue-70: #69A5FF;
+  --atomic-blue-80: #9EC5FF;
+  --atomic-blue-90: #C9DEFE;
+  --atomic-blue-95: #EAF2FE;
+  --atomic-blue-99: #F7FBFF;
+
+  /* ─── Atomic — coolNeutral (text + bg) ─── */
+  --atomic-coolNeutral-5: #0F0F10;
+  --atomic-coolNeutral-7: #141415;
+  --atomic-coolNeutral-10: #171719;
+  --atomic-coolNeutral-15: #1B1C1E;
+  --atomic-coolNeutral-17: #212225;
+  --atomic-coolNeutral-20: #292A2D;
+  --atomic-coolNeutral-22: #2E2F33;
+  --atomic-coolNeutral-23: #333438;
+  --atomic-coolNeutral-25: #37383C;
+  --atomic-coolNeutral-30: #46474C;
+  --atomic-coolNeutral-40: #5A5C63;
+  --atomic-coolNeutral-50: #70737C;
+  --atomic-coolNeutral-60: #878A93;
+  --atomic-coolNeutral-70: #989BA2;
+  --atomic-coolNeutral-80: #AEB0B6;
+  --atomic-coolNeutral-90: #C2C4C8;
+  --atomic-coolNeutral-95: #DBDCDF;
+  --atomic-coolNeutral-96: #E1E2E4;
+  --atomic-coolNeutral-97: #EAEBEC;
+  --atomic-coolNeutral-98: #F4F4F5;
+  --atomic-coolNeutral-99: #F7F7F8;
+
+  /* ─── Atomic — neutral (warm; used for shadow color) ─── */
+  --atomic-neutral-10: #171717;
+
+  /* ─── Atomic — accent palettes ─── */
+  --atomic-red-40: #E52222;     --atomic-red-50: #FF4242;     --atomic-red-60: #FF6363;
+  --atomic-redOrange-48: #F55A00; --atomic-redOrange-50: #FF5E00; --atomic-redOrange-60: #FF7B2E;
+  --atomic-orange-39: #D17600;  --atomic-orange-50: #FF9200;  --atomic-orange-60: #FFA938;
+  --atomic-lime-37: #429E00;    --atomic-lime-50: #58CF04;    --atomic-lime-60: #6BE016;
+  --atomic-green-40: #009632;   --atomic-green-50: #00BF40;   --atomic-green-60: #1ED45A;
+  --atomic-cyan-40: #0098B2;    --atomic-cyan-50: #00BDDE;    --atomic-cyan-60: #28D0ED;
+  --atomic-lightBlue-40: #008DCF; --atomic-lightBlue-50: #00AEFF; --atomic-lightBlue-60: #3DC2FF;
+  --atomic-violet-45: #5B37ED;  --atomic-violet-50: #6541F2;  --atomic-violet-60: #7D5EF7;
+  --atomic-purple-40: #AD36E3;  --atomic-purple-50: #CB59FF;  --atomic-purple-60: #D478FF;
+  --atomic-pink-46: #E846CD;    --atomic-pink-50: #F553DA;    --atomic-pink-60: #FA73E3;
+
+  /* =============================================================
+     SEMANTIC TOKENS — light
+     ============================================================= */
+
+  --semantic-static-white: #ffffff;
+  --semantic-static-black: #000000;
+
+  --semantic-primary-normal: var(--atomic-blue-50);
+  --semantic-primary-strong: var(--atomic-blue-45);
+  --semantic-primary-heavy:  var(--atomic-blue-40);
+
+  --semantic-label-normal:      var(--atomic-coolNeutral-10);
+  --semantic-label-strong:      #000000;
+  --semantic-label-neutral:      #2E2F33E0;
+  --semantic-label-alternative:  #37383C9C;
+  --semantic-label-assistive:    #37383C47;
+  --semantic-label-disable:      #37383C29;
+
+  --semantic-background-normal-normal: #ffffff;
+  --semantic-background-normal-alternative: var(--atomic-coolNeutral-99);
+  --semantic-background-elevated-normal: #ffffff;
+  --semantic-background-elevated-alternative: var(--atomic-coolNeutral-99);
+  --semantic-background-transparent-normal: #ffffff14;
+  --semantic-background-transparent-alternative: #ffffff47;
+
+  --semantic-interaction-inactive: var(--atomic-coolNeutral-70);
+  --semantic-interaction-disable:  var(--atomic-coolNeutral-98);
+
+  --semantic-line-normal-normal:      #70737C38;
+  --semantic-line-normal-neutral:     #70737C29;
+  --semantic-line-normal-alternative: #70737C14;
+  --semantic-line-solid-normal:       var(--atomic-coolNeutral-96);
+  --semantic-line-solid-neutral:      var(--atomic-coolNeutral-97);
+  --semantic-line-solid-alternative:  var(--atomic-coolNeutral-98);
+
+  --semantic-status-positive:   var(--atomic-green-50);
+  --semantic-status-cautionary: var(--atomic-orange-50);
+  --semantic-status-negative:   var(--atomic-red-50);
+
+  --semantic-fill-normal:      #70737C14;
+  --semantic-fill-strong:      #70737C29;
+  --semantic-fill-alternative: #70737C0D;
+
+  --semantic-material-dimmer: #17171985;
+
+  --semantic-inverse-primary:    var(--atomic-blue-60);
+  --semantic-inverse-background: var(--atomic-coolNeutral-15);
+  --semantic-inverse-label:      var(--atomic-coolNeutral-99);
+
+  --semantic-accent-fg-red:        var(--atomic-red-40);
+  --semantic-accent-fg-redOrange:  var(--atomic-redOrange-48);
+  --semantic-accent-fg-orange:     var(--atomic-orange-39);
+  --semantic-accent-fg-lime:       var(--atomic-lime-37);
+  --semantic-accent-fg-green:      var(--atomic-green-40);
+  --semantic-accent-fg-cyan:       var(--atomic-cyan-40);
+  --semantic-accent-fg-lightBlue:  var(--atomic-lightBlue-40);
+  --semantic-accent-fg-blue:       var(--atomic-blue-45);
+  --semantic-accent-fg-violet:     var(--atomic-violet-45);
+  --semantic-accent-fg-purple:     var(--atomic-purple-40);
+  --semantic-accent-fg-pink:       var(--atomic-pink-46);
+
+  --shadow-xsmall: 0px 1px 2px -1px #1717171A;
+  --shadow-small:  0px 2px 4px -2px #1717170F, 0px 4px 6px -1px #1717170F;
+  --shadow-medium: 0px 4px 6px -2px #17171712, 0px 10px 15px -3px #17171712;
+  --shadow-large:  0px 6px 10px -4px #17171714, 0px 16px 24px -6px #17171714;
+  --shadow-xlarge: 0px 10px 15px -5px #1717171A, 0px 24px 38px -10px #1717171F;
+  --shadow-spread-small:  0px 0px 60px 0px #1717171A;
+  --shadow-spread-medium: 0px 15px 75px 0px #17171729;
+
+  --space-0: 0px; --space-0_5: 0.5px; --space-1: 1px; --space-2: 2px;
+  --space-4: 4px; --space-6: 6px; --space-8: 8px; --space-10: 10px;
+  --space-12: 12px; --space-14: 14px; --space-16: 16px; --space-20: 20px;
+  --space-24: 24px; --space-32: 32px; --space-40: 40px; --space-48: 48px;
+  --space-56: 56px; --space-64: 64px; --space-72: 72px; --space-80: 80px;
+
+  --bp-xl: 1600px; --bp-lg: 1200px; --bp-md: 992px; --bp-sm: 768px; --bp-xs: 0px;
+
+  --z-modal: 1300;
+
+  /* =============================================================
+     TYPOGRAPHY
+     ============================================================= */
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --type-display1-size: 3.5rem;    --type-display1-line: 4.5rem;   --type-display1-tracking: -0.0319em;
+  --type-display2-size: 2.5rem;    --type-display2-line: 3.25rem;  --type-display2-tracking: -0.0282em;
+  --type-display3-size: 2.25rem;   --type-display3-line: 3rem;     --type-display3-tracking: -0.027em;
+
+  --type-title1-size: 2rem;        --type-title1-line: 2.75rem;   --type-title1-tracking: -0.0253em;
+  --type-title2-size: 1.75rem;     --type-title2-line: 2.375rem;  --type-title2-tracking: -0.0236em;
+  --type-title3-size: 1.5rem;      --type-title3-line: 2rem;      --type-title3-tracking: -0.023em;
+
+  --type-heading1-size: 1.375rem;  --type-heading1-line: 1.875rem;--type-heading1-tracking: -0.0194em;
+  --type-heading2-size: 1.25rem;   --type-heading2-line: 1.75rem; --type-heading2-tracking: -0.012em;
+
+  --type-headline1-size: 1.125rem; --type-headline1-line: 1.625rem; --type-headline1-tracking: -0.002em;
+  --type-headline2-size: 1.0625rem;--type-headline2-line: 1.5rem;   --type-headline2-tracking: 0;
+
+  --type-body1-size: 1rem;         --type-body1-line: 1.5rem;     --type-body1-tracking: 0.0057em;
+  --type-body1-reading-line: 1.625rem;
+  --type-body2-size: 0.9375rem;    --type-body2-line: 1.375rem;   --type-body2-tracking: 0.0096em;
+  --type-body2-reading-line: 1.5rem;
+
+  --type-label1-size: 0.875rem;    --type-label1-line: 1.25rem;   --type-label1-tracking: 0.0145em;
+  --type-label1-reading-line: 1.375rem;
+  --type-label2-size: 0.8125rem;   --type-label2-line: 1.125rem;  --type-label2-tracking: 0.0194em;
+
+  --type-caption1-size: 0.75rem;   --type-caption1-line: 1rem;    --type-caption1-tracking: 0.0252em;
+  --type-caption2-size: 0.6875rem; --type-caption2-line: 0.875rem;--type-caption2-tracking: 0.0311em;
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 9999px;
+}
+
+/* =============================================================
+   DARK theme overrides
+   ============================================================= */
+[data-theme="dark"] {
+  --semantic-primary-normal: var(--atomic-blue-60);
+  --semantic-primary-strong: var(--atomic-blue-55);
+  --semantic-primary-heavy:  var(--atomic-blue-50);
+
+  --semantic-label-normal:       var(--atomic-coolNeutral-99);
+  --semantic-label-strong:       #ffffff;
+  --semantic-label-neutral:      #C2C4C8E0;
+  --semantic-label-alternative:  #AEB0B69C;
+  --semantic-label-assistive:    #AEB0B647;
+  --semantic-label-disable:      #989BA229;
+
+  --semantic-background-normal-normal:        var(--atomic-coolNeutral-15);
+  --semantic-background-normal-alternative:   var(--atomic-coolNeutral-5);
+  --semantic-background-elevated-normal:      var(--atomic-coolNeutral-17);
+  --semantic-background-elevated-alternative: var(--atomic-coolNeutral-7);
+  --semantic-background-transparent-normal:      #2122259C;
+  --semantic-background-transparent-alternative: #2122259C;
+
+  --semantic-interaction-inactive: var(--atomic-coolNeutral-40);
+  --semantic-interaction-disable:  var(--atomic-coolNeutral-22);
+
+  --semantic-line-normal-normal:      #70737C52;
+  --semantic-line-normal-neutral:     #70737C47;
+  --semantic-line-normal-alternative: #70737C38;
+  --semantic-line-solid-normal:       var(--atomic-coolNeutral-25);
+  --semantic-line-solid-neutral:      var(--atomic-coolNeutral-23);
+  --semantic-line-solid-alternative:  var(--atomic-coolNeutral-22);
+
+  --semantic-status-positive:   var(--atomic-green-60);
+  --semantic-status-cautionary: var(--atomic-orange-60);
+  --semantic-status-negative:   var(--atomic-red-60);
+
+  --semantic-fill-normal:      #70737C38;
+  --semantic-fill-strong:      #70737C47;
+  --semantic-fill-alternative: #70737C1F;
+
+  --semantic-material-dimmer: #171719BD;
+
+  --semantic-inverse-primary:    var(--atomic-blue-50);
+  --semantic-inverse-background: #ffffff;
+  --semantic-inverse-label:      var(--atomic-coolNeutral-10);
+}
+
+/* =============================================================
+   GLOBAL
+   ============================================================= */
+html {
+  font-family: var(--font-sans);
+  color: var(--semantic-label-normal);
+  background: var(--semantic-background-normal-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================================
+   SEMANTIC TYPE CLASSES
+   ============================================================= */
+.t-display1   { font-size: var(--type-display1-size);   line-height: var(--type-display1-line);   letter-spacing: var(--type-display1-tracking);   font-weight: 700; }
+.t-display2   { font-size: var(--type-display2-size);   line-height: var(--type-display2-line);   letter-spacing: var(--type-display2-tracking);   font-weight: 700; }
+.t-display3   { font-size: var(--type-display3-size);   line-height: var(--type-display3-line);   letter-spacing: var(--type-display3-tracking);   font-weight: 700; }
+.t-title1     { font-size: var(--type-title1-size);     line-height: var(--type-title1-line);     letter-spacing: var(--type-title1-tracking);     font-weight: 700; }
+.t-title2     { font-size: var(--type-title2-size);     line-height: var(--type-title2-line);     letter-spacing: var(--type-title2-tracking);     font-weight: 700; }
+.t-title3     { font-size: var(--type-title3-size);     line-height: var(--type-title3-line);     letter-spacing: var(--type-title3-tracking);     font-weight: 700; }
+.t-heading1   { font-size: var(--type-heading1-size);   line-height: var(--type-heading1-line);   letter-spacing: var(--type-heading1-tracking);   font-weight: 600; }
+.t-heading2   { font-size: var(--type-heading2-size);   line-height: var(--type-heading2-line);   letter-spacing: var(--type-heading2-tracking);   font-weight: 600; }
+.t-headline1  { font-size: var(--type-headline1-size);  line-height: var(--type-headline1-line);  letter-spacing: var(--type-headline1-tracking);  font-weight: 600; }
+.t-headline2  { font-size: var(--type-headline2-size);  line-height: var(--type-headline2-line);  letter-spacing: var(--type-headline2-tracking);  font-weight: 600; }
+.t-body1      { font-size: var(--type-body1-size);      line-height: var(--type-body1-line);      letter-spacing: var(--type-body1-tracking);      font-weight: 400; }
+.t-body1-rd   { font-size: var(--type-body1-size);      line-height: var(--type-body1-reading-line); letter-spacing: var(--type-body1-tracking);   font-weight: 400; }
+.t-body2      { font-size: var(--type-body2-size);      line-height: var(--type-body2-line);      letter-spacing: var(--type-body2-tracking);      font-weight: 400; }
+.t-body2-rd   { font-size: var(--type-body2-size);      line-height: var(--type-body2-reading-line); letter-spacing: var(--type-body2-tracking);   font-weight: 400; }
+.t-label1     { font-size: var(--type-label1-size);     line-height: var(--type-label1-line);     letter-spacing: var(--type-label1-tracking);     font-weight: 500; }
+.t-label1-rd  { font-size: var(--type-label1-size);     line-height: var(--type-label1-reading-line); letter-spacing: var(--type-label1-tracking); font-weight: 500; }
+.t-label2     { font-size: var(--type-label2-size);     line-height: var(--type-label2-line);     letter-spacing: var(--type-label2-tracking);     font-weight: 500; }
+.t-caption1   { font-size: var(--type-caption1-size);   line-height: var(--type-caption1-line);   letter-spacing: var(--type-caption1-tracking);   font-weight: 400; }
+.t-caption2   { font-size: var(--type-caption2-size);   line-height: var(--type-caption2-line);   letter-spacing: var(--type-caption2-tracking);   font-weight: 400; }
+
+.fw-regular { font-weight: 400 !important; }
+.fw-medium  { font-weight: 500 !important; }
+.fw-bold    { font-weight: 600 !important; }
+.fw-bolder  { font-weight: 700 !important; }
