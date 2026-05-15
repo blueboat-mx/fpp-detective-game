@@ -1234,15 +1234,19 @@ body {
   margin: 8px auto 0;
   display: block;
 }
+/* Mascot bubble repositioned to TOP of figure, right-aligned
+   so long Korean lines don't overflow the left edge. */
 .mascot-float {
   position: fixed;
   bottom: 86px;
   right: 14px;
   z-index: 25;
   display: flex;
+  flex-direction: column;
   align-items: flex-end;
   gap: 6px;
   pointer-events: auto;
+  max-width: calc(100% - 28px);
 }
 @media (min-width: 720px) {
   .mascot-float { position: absolute; }
@@ -1255,14 +1259,18 @@ body {
   line-height: 1.4;
   padding: 8px 10px;
   border-radius: 12px 12px 4px 12px;
-  max-width: 200px;
+  max-width: min(240px, calc(100vw - 100px));
+  text-align: right;
   box-shadow: 0 6px 14px -8px rgba(0,0,0,0.2);
   animation: bubble-in .4s ease-out;
   position: relative;
 }
 .mascot-float .bubble::after {
-  content: ""; position: absolute; right: -6px; bottom: 8px;
-  border: 6px solid transparent; border-left-color: var(--case-navy);
+  /* point DOWN toward the figure now (bubble on top) */
+  content: ""; position: absolute; right: 14px; bottom: -6px;
+  border: 6px solid transparent;
+  border-top-color: var(--case-navy);
+  border-bottom: 0;
 }
 @keyframes bubble-in {
   from { opacity: 0; transform: translateY(6px) scale(0.9); }
@@ -1867,6 +1875,32 @@ body {
 /* ============================================================
    Tweaks panel anchor (Tweaks UI lives in app.jsx via starter)
    ============================================================ */
+
+/* ============================================================
+   Text-only Before/After chips + mobile img safety
+   ============================================================ */
+.ba-text-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  border: 1.5px dashed var(--paper-line);
+  background: var(--paper);
+  color: var(--case-navy);
+}
+.ba-text-chip.before { border-color: var(--case-navy-3); }
+.ba-text-chip.after  { border-color: var(--ok); color: var(--ok); }
+
+.map-card .map-img img {
+  -webkit-user-drag: none;
+  user-select: none;
+  background: var(--paper-2);
+}
 
 /* Subtle paper grain */
 .phone-shell::before {
@@ -2917,7 +2951,7 @@ function FinalAnswerInput({ expected, attempts, locked, onAttempt, onCorrect, ma
           disabled={locked || exhausted}
           onChange={(e) => setVal(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") submit(); }}
-          placeholder="예) 빗물받이"
+          placeholder=""
           autoComplete="off"
         />
         <button className="submit" onClick={submit} disabled={!val.trim() || locked || exhausted}>
@@ -3042,7 +3076,7 @@ const { useState, useEffect, useRef } = React;
    ============================================================ */
 const CODES = {
   mission0_npc: "1492", // 요원 우열
-  rally_word: "선너굴", // 집결지 출동 단어 (요원 예은이 구두로 전달)
+  rally_word: "플플플", // 집결지 출동 단어 (요원 예은이 구두로 전달)
   mission1_npc: "7308", // 정보원 (요원 미정 또는 요원 예원)
   mission2_npc: "5160" // 정보원 (요원 수현 또는 요원 은주)
 };
@@ -3056,19 +3090,25 @@ const ACCEPTABLE_FINAL = [// 동의어 정답 후보 — 어떤 것 하나라도
 
 const TIMER_TOTAL_MS = 60 * 60 * 1000; // 1시간
 
-const MAPS = {
+/* Lazy-resolve map URLs at render time so bundled blob URLs are picked up
+   regardless of script load order. */
+const MAP_FALLBACK = {
   m0: "assets/maps/01-hwayang.png",
-  rallyHQ: "assets/maps/01-hwayang.png",
   m1: "assets/maps/02-gajung.png",
   m2: "assets/maps/03-noyusan.png",
   final: "assets/maps/04-norunsan.png"
 };
+const MAP_RES_KEY = { m0: "mapM0", m1: "mapM1", m2: "mapM2", final: "mapFinal" };
+function mapUrl(k) {
+  const r = (typeof window !== "undefined" && window.__resources) || {};
+  return r[MAP_RES_KEY[k]] || MAP_FALLBACK[k];
+}
 
 const PLACES = {
-  m0: { name: "화양어린이공원", address: "서울 광진구 능동로 17길 일대 · 건대입구역 6번 출구", dist: "도보 약 6분" },
-  m1: { name: "가중나무공원", address: "서울 광진구 동일로28길 16 · 어린이대공원역 4번 출구", dist: "도보 약 12분" },
-  m2: { name: "노유산공원", address: "서울 광진구 자양동 일대 · 건대입구역", dist: "도보 약 9분" },
-  final: { name: "노룬산공원", address: "서울 광진구 자양동 · 건대입구역 6번 출구 약 720m", dist: "도보 약 14분" }
+  m0:    { name: "화양어린이공원", address: "서울 광진구 능동로 17길 일대 · 건대입구역 6번 출구" },
+  m1:    { name: "가중나무공원",   address: "서울 광진구 동일로28길 16 · 어린이대공원역 4번 출구" },
+  m2:    { name: "노유산공원",     address: "서울 광진구 자양동 일대 · 건대입구역" },
+  final: { name: "노룬산공원",     address: "서울 광진구 자양동 · 건대입구역 6번 출구 약 720m" }
 };
 
 const COPY = {
@@ -3099,13 +3139,12 @@ const COPY = {
 
   m2: [
   "첫 단서만으론 부족해. 게다가 거점 사이 길에도 단서가 흘려 있어.",
-  "가중나무공원에서 노유산공원까지 가는 길에서, 막혀 있는 빗물받이 한 곳을 찾아내. 그 안에 우리 바다로 흘러갈 뻔한 진짜 증거가 잠겨 있어.",
+  "가중나무공원에서 노유산공원까지 가는 길에서, 빗물받이 한 곳을 찾아내. 그 안에 우리 바다로 흘러갈 뻔한 진짜 증거가 잠겨 있어.",
   "치우고, Before / After 사진으로 인증해. 그게 두 번째 거점 입장권이야."],
 
   finalTravel: [
   "마지막 여정이야.",
-  "지금까지 너희는 단서 두 조각을 모았어. 하지만 그중 하나는 거짓일 수 있어.",
-  "충격 첩보 하나 더 풀게. 너희가 만난 4명의 정보원 중 1명은 적의 첩자였다. 한 단서는 일부러 어긋난 단서야.",
+  "충격 첩보 하나 더 풀게. 너희가 만난 4명의 정보원 중 1명은 배신자였어.",
   "노룬산공원으로 이동하면서 — 다른 팀과 단서를 비교/교환해도 좋고, 단독으로 숨겨도 좋아. 이건 첩보전이기도 하니까."],
 
   finalTravelClose: [
@@ -3191,7 +3230,7 @@ function ScreenIntro({ onSubmit }) {
             maxLength={12}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => {if (e.key === "Enter" && name.trim()) onSubmit(name.trim());}} />
-
+          
           <div style={{ fontSize: 12, color: "var(--case-navy-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>
             * 한 번 등록되면 오늘 하루 이 이름으로 불립니다.
           </div>
@@ -3219,7 +3258,7 @@ function ScreenMission0({ name, onPass }) {
 
       <MsgThread messages={COPY.m0(name)} />
 
-      <MapCard place={PLACES.m0.name} address={PLACES.m0.address} dist={PLACES.m0.dist} img={MAPS.m0} />
+      <MapCard place={PLACES.m0.name} address={PLACES.m0.address} img={mapUrl("m0")} />
 
       <MissionBox
         title="MISSION 0"
@@ -3295,7 +3334,7 @@ function ScreenRally({ name, onPass }) {
         expected={CODES.rally_word}
         onSubmit={onPass}
         helper="요원 예은이 알려준 단어를 그대로 입력해."
-        ctaLabel="출동 · 카운트다운 시작" />
+        ctaLabel="출동" />
       
     </div>);
 
@@ -3308,14 +3347,14 @@ function ScreenMission1({ onPass }) {
       <h1 className="screen-title">자격을 <span className="yellow">증명하라</span></h1>
       <div className="screen-sub">SITE A · CREDENTIAL CHECK</div>
 
-      <MapCard place={PLACES.m1.name} address={PLACES.m1.address} dist={PLACES.m1.dist} img={MAPS.m1} />
+      <MapCard place={PLACES.m1.name} address={PLACES.m1.address} img={mapUrl("m1")} />
 
       <MsgThread messages={COPY.m1} />
 
       <MissionBox
         title="MISSION 1 — 자격 증명"
         items={[
-        "통행료: 팀당 쓰레기 봉투 채워가기 (많을수록 좋음)",
+        "통행료: 팀당 쓰레기 봉투 2개 이상 채우기 (많을수록 좋음)",
         "NPC에게 봉투 보여주고 체크 받기",
         "NPC가 내는 퀴즈 통과하기",
         "정보원 미정 / 정보원 예원 중 한 명 선택 → 단서 한 조각 확보"]
@@ -3324,7 +3363,7 @@ function ScreenMission1({ onPass }) {
 
       <div className="warn-box">
         <div className="h">🎨 증거 = 작품 재료</div>
-        주운 증거품들로, 마지막에 <strong>‘바다를 위협하는 범인’</strong>을 가리키는 <strong>정크아트</strong>를 만들어 발표할 거야. 그러니 많이, 다양하게 주워둬.
+        주운 증거품들로, 마지막에 <strong>‘범인’</strong>을 가리키는 <strong>정크아트</strong>를 만들어 발표할 거야.
       </div>
 
       <div className="sub-box">
@@ -3349,15 +3388,14 @@ function ScreenMission2({ onPass }) {
       <h1 className="screen-title">빗물받이를 <span className="yellow">정화하라</span></h1>
       <div className="screen-sub">SITE B · UNCLOG &amp; DOCUMENT</div>
 
-      <MapCard place={PLACES.m2.name} address={PLACES.m2.address} dist={PLACES.m2.dist} img={MAPS.m2} />
+      <MapCard place={PLACES.m2.name} address={PLACES.m2.address} img={mapUrl("m2")} />
 
       <MsgThread messages={COPY.m2} />
 
       <MissionBox
         title="MISSION 2 — 빗물받이 정화 + 현장 퀴즈"
         items={[
-        "통행료 보여주기 (지금까지 채운 봉투)",
-        "이동 경로 위 막힌 빗물받이 한 곳 청소 · Before / After 사진 촬영",
+        "통행료: 팀당 쓰레기 봉투 5개 이상 누적 (지금까지 채운 봉투 모두)",
         "NPC에게 Before / After 사진 제시",
         "현장 퀴즈 통과 → 두 번째 단서 + 다음 코드 획득"]
         } />
@@ -3371,18 +3409,12 @@ function ScreenMission2({ onPass }) {
         <div style={{ fontSize: 13, color: "var(--case-navy-3)", marginBottom: 6, lineHeight: 1.5 }}>
           빗물받이 안에 쌓인 담배꽁초·비닐·플라스틱은 비가 오면 그대로 바다로 흘러가. 한 곳만 청소해도 작은 강 하나를 막는 셈이야.
         </div>
-        <div className="beforeafter">
-          <div className="ba-cell">
-            <span className="ba-label">BEFORE</span>
-            <image-slot id="ba-before" placeholder="청소 전 사진" shape="rounded" radius="10"></image-slot>
-          </div>
-          <div className="ba-cell">
-            <span className="ba-label">AFTER</span>
-            <image-slot id="ba-after" placeholder="청소 후 사진" shape="rounded" radius="10"></image-slot>
-          </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 4 }}>
+          <span className="ba-text-chip before">BEFORE · 청소 전</span>
+          <span className="ba-text-chip after">AFTER · 청소 후</span>
         </div>
-        <div style={{ fontSize: 12, color: "var(--case-navy-3)", marginTop: 8, fontFamily: "var(--font-mono)" }}>
-          * 사진은 단말에 임시 저장돼. 현장 NPC에게 직접 보여줘.
+        <div style={{ fontSize: 12, color: "var(--case-navy-3)", marginTop: 10, fontFamily: "var(--font-mono)" }}>
+          * 팀 단말로 직접 찍고, 현장 NPC에게 보여주면 완료.
         </div>
       </div>
 
@@ -3417,13 +3449,13 @@ function ScreenFinalTravel({ attempts, locked, onAttempt, onCorrect, onProceed, 
       <h1 className="screen-title">단서를 <span className="yellow">대조하라</span></h1>
       <div className="screen-sub">FINAL APPROACH · 진짜 범인은 누구인가</div>
 
-      <MapCard place={PLACES.final.name} address={PLACES.final.address} dist={PLACES.final.dist} img={MAPS.final} />
+      <MapCard place={PLACES.final.name} address={PLACES.final.address} img={mapUrl("final")} />
 
       <MsgThread messages={COPY.finalTravel} />
 
       <div className="danger-box">
         <div className="h">💀 충격 첩보</div>
-        너희가 만난 4명의 정보원 중 <strong>1명은 적의 첩자였다.</strong> 그자가 흘린 거짓 단서를 믿으면 — 작품도, 추리도 빗나가.
+        너희가 만난 4명의 정보원 중 <strong>1명은 배신자였어.</strong>
       </div>
 
       <div className="strategy-grid">
@@ -3504,7 +3536,7 @@ function ScreenFinalMission({ onPass }) {
         items={[
         "지금까지 모은 쓰레기 전부 — 그게 너희의 재료",
         "팀이 추리한 ‘범인’의 형상을 표현 (인물·물체·상징 자유)",
-        "완성 후 요원 예은에게 작품 제시 → 사건 종결"]
+        "작품 완성 → 사건 종결"]
         }
         tag="🛠" />
       
@@ -3568,7 +3600,7 @@ function ScreenClosing({ name, timerStartedAt, timerStoppedAt }) {
         </div>
       }
 
-      <div className="reveal-box">
+      <div className="reveal-box" style={{ display: "none" }}>
         <div className="h">CULPRIT</div>
         <div className="culprit">
           <span className="culprit-placeholder">[현장 발표]</span>
@@ -3598,137 +3630,32 @@ function ScreenClosing({ name, timerStartedAt, timerStoppedAt }) {
 }
 
 /* ============================================================
-   Operator TOC Panel — progressive unlock.
-   Always visible (bottom-left). Shows all 8 screens; only ones up to
-   maxReached are jumpable. Locked entries are masked to avoid spoilers.
-   ============================================================ */
-const SCREEN_TOC = [
-  { idx: 0, label: "인트로", sub: "선너굴 첫 인사" },
-  { idx: 1, label: "접선",  sub: "요원 우열 찾기" },
-  { idx: 2, label: "집결지", sub: "HQ 브리핑 · 타이머 발동" },
-  { idx: 3, label: "거점 A", sub: "자격 증명" },
-  { idx: 4, label: "거점 B", sub: "빗물받이 정화" },
-  { idx: 5, label: "최종 이동", sub: "단서 대조 · 정답 입력" },
-  { idx: 6, label: "최종 미션", sub: "정크아트 제작" },
-  { idx: 7, label: "사건 종결", sub: "파일 종결" },
-];
-
-function OperatorPanel({ open, screen, maxReached, onJump, onClose, onReset }) {
-  const [confirmReset, setConfirmReset] = useState(false);
-  if (!open) return null;
-  return (
-    <div className="modal-scrim" onClick={onClose} style={{ alignItems: "stretch" }}>
-      <div className="modal op-panel" onClick={(e) => e.stopPropagation()}>
-        <div className="op-head">
-          <div className="op-title">
-            <span className="badge">⚑ 운영</span>
-            <span>작전 목차</span>
-          </div>
-          <button className="op-close" onClick={onClose} aria-label="닫기">✕</button>
-        </div>
-
-        <div className="op-sub">
-          코드를 통과한 단계만 이동 가능. 앞 단계는 잠겨 있어 스포일러 방지.
-        </div>
-
-        <ol className="op-list">
-          {SCREEN_TOC.map((s) => {
-            const unlocked = s.idx <= maxReached;
-            const current = s.idx === screen;
-            const cls = `op-item ${unlocked ? "unlocked" : "locked"} ${current ? "current" : ""}`;
-            return (
-              <li
-                key={s.idx}
-                className={cls}
-                onClick={() => unlocked && onJump(s.idx)}>
-                <span className="op-num">{String(s.idx + 1).padStart(2, "0")}</span>
-                <span className="op-meta">
-                  <span className="op-label">
-                    {unlocked ? s.label : "잠금"}
-                  </span>
-                  <span className="op-sub-line">
-                    {unlocked ? s.sub : "—·— 코드 통과 전"}
-                  </span>
-                </span>
-                <span className="op-state">
-                  {current ? "진행 중" : unlocked ? "→" : "🔒"}
-                </span>
-              </li>
-            );
-          })}
-        </ol>
-
-        <div className="op-foot">
-          {confirmReset ? (
-            <>
-              <span className="op-foot-msg">진짜 초기화할까?</span>
-              <button className="btn btn-ghost op-mini" onClick={() => setConfirmReset(false)}>취소</button>
-              <button
-                className="btn btn-primary op-mini"
-                style={{ background: "var(--danger)" }}
-                onClick={() => { onReset(); setConfirmReset(false); onClose(); }}>
-                예, 초기화
-              </button>
-            </>
-          ) : (
-            <>
-              <span className="op-foot-msg">이 단말의 진행 상태를 돌리기</span>
-              <button className="btn btn-ghost op-mini" onClick={() => setConfirmReset(true)}>재시작…</button>
-            </>
-          )}
-        </div>
-      </div>
-    </div>);
-}
-
-function OperatorButton({ onOpen }) {
-  return (
-    <button className="op-btn" onClick={onOpen} aria-label="작전 목차 열기">
-      <span className="op-btn-icon">⚑</span>
-      <span className="op-btn-label">목차</span>
-    </button>);
-}
-
-/* ============================================================
    Main App — state machine
    ============================================================ */
 function App() {
   const init = loadState();
   const [screen, setScreen] = useState(init.screen);
-  const [maxReached, setMaxReached] = useState(init.maxReached || init.screen || 0);
+  const [resetConfirm, setResetConfirm] = useState(false);
   const [agentName, setAgentName] = useState(init.agentName);
   const [sosUsed, setSosUsed] = useState(init.sosUsed);
   const [timerStartedAt, setTimerStartedAt] = useState(init.timerStartedAt);
   const [timerStoppedAt, setTimerStoppedAt] = useState(init.timerStoppedAt);
   const [attempts, setAttempts] = useState(init.attempts || []);
-  const [opPanel, setOpPanel] = useState(false);
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    saveState({ screen, maxReached, agentName, sosUsed, timerStartedAt, timerStoppedAt, attempts });
-  }, [screen, maxReached, agentName, sosUsed, timerStartedAt, timerStoppedAt, attempts]);
+    saveState({ screen, agentName, sosUsed, timerStartedAt, timerStoppedAt, attempts });
+  }, [screen, agentName, sosUsed, timerStartedAt, timerStoppedAt, attempts]);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
   }, [screen]);
 
-  const goNext = () => setScreen((s) => {
-    const next = Math.min(7, s + 1);
-    setMaxReached((m) => Math.max(m, next));
-    return next;
-  });
-
-  const jumpTo = (idx) => {
-    if (idx <= maxReached) {
-      setScreen(idx);
-      setOpPanel(false);
-    }
-  };
+  const goNext = () => setScreen((s) => Math.min(7, s + 1));
 
   const reset = () => {
     localStorage.removeItem(STORE);
     setScreen(0);
-    setMaxReached(0);
     setAgentName("");
     setSosUsed(false);
     setTimerStartedAt(null);
@@ -3796,15 +3723,33 @@ function App() {
       <MascotFloat line={FLOAT_LINES[screen]} mood={screen >= 6 ? "salute" : "wave"} />
       }
 
-      <OperatorButton onOpen={() => setOpPanel(true)} />
+      <button
+        onClick={() => setResetConfirm(true)}
+        style={{
+          position: "absolute", bottom: "18px", left: "14px", zIndex: 26,
+          background: "rgba(11,23,51,0.75)", color: "#fff",
+          border: "1px solid rgba(255,255,255,0.15)",
+          borderRadius: "999px", padding: "7px 13px",
+          fontSize: 11, fontFamily: "var(--font-mono)", fontWeight: 700,
+          cursor: "pointer", letterSpacing: "0.04em"
+        }}>
+        ↺ 초기화
+      </button>
 
-      <OperatorPanel
-        open={opPanel}
-        screen={screen}
-        maxReached={maxReached}
-        onJump={jumpTo}
-        onClose={() => setOpPanel(false)}
-        onReset={reset} />
+      {resetConfirm && (
+        <div className="modal-scrim" onClick={() => setResetConfirm(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="icon-big">↺</div>
+            <h3>처음부터 다시 시작할까?</h3>
+            <p>진행 상태와 코드네임이 모두 초기화돼.</p>
+            <div className="row">
+              <button className="btn btn-ghost" onClick={() => setResetConfirm(false)}>아니오</button>
+              <button className="btn btn-primary" style={{ background: "var(--danger)" }}
+                onClick={() => { reset(); setResetConfirm(false); }}>예</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>);
 
 }
